@@ -44,3 +44,27 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --alluredir=allure-results
+    
+    - name: Upload Allure results artifact
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: allure-results
+        path: allure-results
+        retention-days: 30
+    
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+    
+    - name: Generate Allure Report
+      uses: simple-elf/allure-report-action@master
+      id: allure-report
+      with:
+        allure_results: allure-results
+        allure_report: allure-report
+        gh_pages: false
+
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: allure-report
